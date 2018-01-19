@@ -72,11 +72,21 @@ $ source devel/setup.bash
 ### For Version 3 Robot
 
 To use this code on the Version 3 Segway Robot, one must also define
-some enviroment variables.  The steps for doing this and the specific
-environment variables are described on the project wiki.  Eventually,
-that should no longer be necessary.
+some enviroment variables. The shell commands below will add them to your bashrc. Double check that the interface address and ip address are correct. You can check this by using the command:
+```
+$ ifconfig
+```
+
+```
+echo "export SEGWAY_INTERFACE_ADDRESS=10.66.171.1" >> ~/.bashrc
+echo "export SEGWAY_IP_ADDRESS=10.66.171.5" >> ~/.bashrc
+echo "export SEGWAY_IP_PORT_NUM=8080" >> ~/.bashrc
+echo "export SEGWAY_BASE_PLATFORM=RMP_110" >> ~/.bashrc
+echo "export SEGWAY_PLATFORM_NAME=RMP_110" >> ~/.bashrc
+```
 
 ### From Binary Packages
+NOTE: Binary Packages are from ut, so do not expect them to work on the csu segbot without some tinkering.
 
 You may install the latest binary release, when available, from the
 ROS package repository.  These will not usually be the latest versions:
