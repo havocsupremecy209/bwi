@@ -13,7 +13,7 @@
   <include file="$(find bwi_launch)/launch/includes/segbot.launch.xml">
     <arg name="laser_max_range" value="20.0" />
     <arg name="localization_scan_topic" value="$(arg localization_scan_topic)" />
-    <arg name="move_base_config" value="segbotv4" />
+    <arg name="move_base_config" value="segbotv2" />
   </include>
 
   <include file="$(find segbot_bringup)/launch/segbot_csu.launch"/>
