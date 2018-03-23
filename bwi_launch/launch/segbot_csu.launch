@@ -8,7 +8,7 @@
   </node>
 
   <!-- Set the default level we'd like this robot to start on -->
-  <param name="level_mux/default_current_level" value="2ndFloor" />
+  <param name="level_mux/default_current_level" value="3rdFloor" />
 
   <include file="$(find bwi_launch)/launch/includes/segbot.launch.xml">
     <arg name="laser_max_range" value="20.0" />
