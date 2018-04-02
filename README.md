@@ -85,12 +85,59 @@ echo "export SEGWAY_BASE_PLATFORM=RMP_110" >> ~/.bashrc
 echo "export SEGWAY_PLATFORM_NAME=RMP_110" >> ~/.bashrc
 ```
 
-### From Binary Packages
-NOTE: Binary Packages are from ut, so do not expect them to work on the csu segbot without some tinkering.
+## Usage
 
-You may install the latest binary release, when available, from the
-ROS package repository.  These will not usually be the latest versions:
+### Navigation
 
+To launch bwi and all packages required for navigation at CSU use
 ```
-$ sudo apt-get install ros-$ROS_DISTRO-bwi-desktop-full
+$ roslaunch bwi_launch segbot_csu.launch
 ```
+
+You likely will want to open up rviz to give a pose estimate or simple navigation goals.
+```
+$ rosrun segbot_navigation rviz_runner
+```
+
+If you need to drive the segbot with a controller use the bwi_joystick_teleop package. Double check that the joystick is in X mode and not D mode or it will not work as expected. You can check this by looking at the physical switch on the joystick. 
+```
+$ roslaunch bwi_joystick_teleop joystick_teleop.launch
+```
+
+### Making a map with the segbot
+
+You'll need to turn on the base segway drivers followed by gmapping and rviz.
+```
+$ roslaunch segbot_bringup segbot_csu.launch
+$ roslaunch segbot_navigation gmapping_csu.launch
+$ rosrun rviz rviz
+```
+
+You can see your map being created in real time by selecting the map topic in rviz. When you are done you can save your map with the map_server package.
+```
+$ rosrun map_server map_saver -f ~/<map_name>
+```
+
+That will save a map in your selected directory.
+
+### Adding a map to the bwi system.
+
+Adding a map to bwi takes multiple steps. First you need to put the maps in the correct directory and update the world file accordingly. Then, you need to logically mark the map with locations, doors, and objects. Finally, you need to update asp to reflect the marked locations. For this example I am adding maps for an imaginary 5th floor.
+
+The maps at CSU live at bwi_common/utexas_gdc/maps/real/csu/. Navigate there and copy the map and yaml file into a folder named 5. Note that I renamed the map and yaml from myMap to 5. Make sure the yaml file reflects this change.
+```
+$ roscd utexas_gdc/maps/real/csu
+$ mkdir 5
+$ cp ~/myMap.yaml ./5/5.yaml
+$ cp ~/myMap.pgm ./5/5.pgm
+```
+
+We need to use the logical marker tool to mark locations and doors. Every part of the map should be marked with a location. For a new floor you need at a minimum 2 locations (one for an elevator and one for the rest of the floor) and 1 door connecting them. Ideally there would be more than that. To run the logical marker use:
+```
+$ rosrun bwi_planning_common logical_marker _map_file:=5.yaml _data_directory:=./
+```
+Remember to use your own map file and the proper data directory.
+
+Now we need to update the world file to support a new floor. CSU's multimap yaml file is in utexas_gdc/maps/real/multimap/csu_multimap.yaml.
+
+Lastly we need to update the asp to reflect the changes we made with the logical marker. The asp for cleveland state is in bwi_kr_execution/domain. If you used the logical marker tool to update an already exsiting map, you'll need to edit navigation_facts.asp. If you added a new floor or additional elevators you need to edit elevators_facts.asp in addition to navigation_facts.asp. Make sure every location/door/object has corrisponding asp.
