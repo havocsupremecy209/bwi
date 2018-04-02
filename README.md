@@ -73,9 +73,7 @@ $ source devel/setup.bash
 
 To use this code on the Version 3 Segway Robot, one must also define
 some enviroment variables. The shell commands below will add them to your bashrc. Double check that the interface address and ip address are correct. You can check this by using the command:
-```
-$ ifconfig
-```
+
 
 ```
 echo "export SEGWAY_INTERFACE_ADDRESS=10.66.171.1" >> ~/.bashrc
